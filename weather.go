@@ -78,11 +78,16 @@ func main() {
 	fmt.Println("Starting app!")
 	router := gin.Default()
 
-	router.GET("/weather/:city/:unit", func(c *gin.Context) {
+	router.GET("/weather/:city", func(c *gin.Context) {
 		city := c.Param("city")
 		fmt.Printf("City: %s\n", city)
-		unit := c.Param("unit")
+
+		unit := c.Query("unit")
+		if unit == "" {
+			unit = "imperial" // metric, imperial, standard
+		}
 		fmt.Printf("Unit: %s\n", unit)
+
 		weatherData, err := getWeather(city, unit)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
