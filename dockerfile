@@ -1,0 +1,21 @@
+# Use a Golang image
+FROM golang:1.20-alpine
+WORKDIR /app
+
+# Copy go modules to the working directory
+COPY go.mod go.sum ./
+
+# Download any dependencies
+RUN go mod download
+
+# Copy the rest of the application code
+COPY . .
+
+# Build the Go application
+RUN go build -o main .
+
+# Expose port 8080
+EXPOSE 8080
+
+# Command to run when the container starts
+CMD ["./main"]
