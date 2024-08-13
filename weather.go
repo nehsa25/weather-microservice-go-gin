@@ -84,22 +84,41 @@ func getRequest(url string) (WeatherResponse, error) {
 	return weatherData, nil
 }
 
-func getWeatherWords(city string, unit string) (string, error) {
-	fmt.Println("getWeatherWords: entering")
+func getWeather(city string, unit string) (WeatherResponse, error) {
 	apiKey := getKey()
 	url := fmt.Sprintf("https://api.openweathermap.org/data/2.5/weather?q=%s&appid=%s&units=%s", city, apiKey, unit)
 	fmt.Println("url:", url)
-	weatherData, err := getRequest(url)
+	return getRequest(url)
+}
+
+func getWeatherJson(city string, unit string) (string, error) {
+	fmt.Println("getWeatherJson: entering")
+	weatherData, err := getWeather(city, unit)
 	jsonData, err := json.Marshal(weatherData)
 	if err != nil {
 		fmt.Printf("Error marshalling weather data: %s", err)
 	}
-	fmt.Printf("getWeatherWords: returning: %s\n", jsonData)
-	//fmt.Printf("getWeatherWords: returning: %s\n", weatherData.Weather[0].Main)
+	serializedWeatherData := string(jsonData)
+	fmt.Printf("getWeatherJson: returning: %s\n", serializedWeatherData)
+	return serializedWeatherData, err
+}
+
+func getWeatherTemp(city string, unit string) (string, error) {
+	fmt.Println("getWeatherTemp: entering")
+	weatherData, err := getWeather(city, unit)
+	tempString := fmt.Sprintf("%.2f", weatherData.Main.Temp)
+	fmt.Printf("getWeatherTemp: returning: %s\n", tempString)
+	return tempString, err
+}
+
+func getWeatherWords(city string, unit string) (string, error) {
+	fmt.Println("getWeatherWords: entering")
+	weatherData, err := getWeather(city, unit)
+	fmt.Printf("getWeatherWords: returning: %s\n", weatherData.Weather[0].Main)
 	return weatherData.Weather[0].Main, err
 }
 
-func generateAsciiWeather(weather []byte) []byte {
+func generateAsciiWeather(weather string) string {
 	fmt.Println("Converting to ASCII art")
 	asciiArt := weather
 	fmt.Printf("Returning: %s\n", asciiArt)
@@ -110,8 +129,7 @@ func main() {
 	fmt.Println("Starting app!")
 	router := gin.Default()
 
-	router.GET("/weather/:city", func(c *gin.Context) {
-		// city parameter
+	router.GET("/weather_description/:city", func(c *gin.Context) {
 		city := c.Param("city")
 		fmt.Printf("City: %s\n", city)
 
@@ -127,10 +145,67 @@ func main() {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
+		c.String(http.StatusOK, string(weatherData))
+	})
+
+	router.GET("/weather_temp/:city", func(c *gin.Context) {
+		city := c.Param("city")
+		fmt.Printf("City: %s\n", city)
+
+		// unit query parameter
+		unit := c.Query("unit")
+		if unit == "" {
+			unit = "imperial" // metric, imperial, standard
+		}
+		fmt.Printf("Unit: %s\n", unit)
+
+		weatherData, err := getWeatherTemp(city, unit)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+		c.String(http.StatusOK, string(weatherData))
+	})
+
+	router.GET("/weather_ascii/:city", func(c *gin.Context) {
+		city := c.Param("city")
+		fmt.Printf("City: %s\n", city)
+
+		// unit query parameter
+		unit := c.Query("unit")
+		if unit == "" {
+			unit = "imperial" // metric, imperial, standard
+		}
+		fmt.Printf("Unit: %s\n", unit)
+
+		weatherData, err := getWeatherJson(city, unit)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
 
 		asciiWeather := generateAsciiWeather(weatherData)
 		weatherString := string(asciiWeather)
 		c.String(http.StatusOK, weatherString)
+	})
+
+	router.GET("/weather_all/:city", func(c *gin.Context) {
+		city := c.Param("city")
+		fmt.Printf("City: %s\n", city)
+
+		// unit query parameter
+		unit := c.Query("unit")
+		if unit == "" {
+			unit = "imperial" // metric, imperial, standard
+		}
+		fmt.Printf("Unit: %s\n", unit)
+
+		weatherData, err := getWeatherJson(city, unit)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+		c.String(http.StatusOK, string(weatherData))
 	})
 
 	fmt.Println("Running service on port 8080")
