@@ -11,14 +11,14 @@ RUN go mod download
 # Copy the rest of the application code
 COPY . .
 
+# Set release mode
+ENV GIN_MODE=release
+
 # Build the Go application
 RUN go build -o main .
 
 # Expose port 8080
 EXPOSE 8080
-
-# Set release mode
-ENV GIN_MODE=release
 
 # Command to run when the container starts
 CMD ["./main"]

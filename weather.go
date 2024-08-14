@@ -153,9 +153,9 @@ func main() {
 		fmt.Printf("City: %s\n", city)
 
 		// unit query parameter
-		unit := c.Query("unit")
+		unit := c.Query("units")
 		if unit == "" {
-			unit = "imperial" // metric, imperial, standard
+			unit = "imperial" // metric, imperial
 		}
 		fmt.Printf("Unit: %s\n", unit)
 
@@ -172,9 +172,9 @@ func main() {
 		fmt.Printf("City: %s\n", city)
 
 		// unit query parameter
-		unit := c.Query("unit")
+		unit := c.Query("units")
 		if unit == "" {
-			unit = "imperial" // metric, imperial, standard
+			unit = "imperial" // metric, imperial
 		}
 		fmt.Printf("Unit: %s\n", unit)
 
@@ -191,7 +191,7 @@ func main() {
 	// 	fmt.Printf("City: %s\n", city)
 
 	// 	// unit query parameter
-	// 	unit := c.Query("unit")
+	// 	unit := c.Query("units")
 	// 	if unit == "" {
 	// 		unit = "imperial" // metric, imperial, standard
 	// 	}
@@ -212,7 +212,7 @@ func main() {
 		fmt.Printf("City: %s\n", city)
 
 		// unit query parameter
-		unit := c.Query("unit")
+		unit := c.Query("units")
 		if unit == "" {
 			unit = "imperial" // metric, imperial
 		}
