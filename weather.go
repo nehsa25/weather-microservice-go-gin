@@ -118,12 +118,31 @@ func getWeatherWords(city string, unit string) (string, error) {
 	return weatherData.Weather[0].Main, err
 }
 
-func generateAsciiWeather(weather string) string {
-	fmt.Println("Converting to ASCII art")
-	asciiArt := weather
-	fmt.Printf("Returning: %s\n", asciiArt)
-	return asciiArt
-}
+// func generateAsciiWeather(weather string) string {
+// 	fmt.Println("Converting to ASCII art")
+// 	art := ""
+// 	switch weather {
+// 	case "cloudy":
+// 		art = "☁️"
+// 	case "rain":
+// 		art = "🌧️"
+// 	case "snow":
+// 		art = "❄️"
+// 	case "clear":
+// 		art = "☀️"
+// 	case "sunny":
+// 		art = "☀️"
+// 	case "thunderstorm":
+// 		art = "⛈️"
+// 	case "mist":
+// 		art = "🌫️"
+// 	default:
+// 		art = ""
+// 	}
+// 	var em = gin.H{"emoji": art}
+// 	fmt.Printf("Returning: %s\n", art)
+// 	return em
+// }
 
 func main() {
 	fmt.Println("Starting app!")
@@ -167,27 +186,26 @@ func main() {
 		c.String(http.StatusOK, string(weatherData))
 	})
 
-	router.GET("/weather_ascii/:city", func(c *gin.Context) {
-		city := c.Param("city")
-		fmt.Printf("City: %s\n", city)
+	// router.GET("/weather_ascii/:city", func(c *gin.Context) {
+	// 	city := c.Param("city")
+	// 	fmt.Printf("City: %s\n", city)
 
-		// unit query parameter
-		unit := c.Query("unit")
-		if unit == "" {
-			unit = "imperial" // metric, imperial, standard
-		}
-		fmt.Printf("Unit: %s\n", unit)
+	// 	// unit query parameter
+	// 	unit := c.Query("unit")
+	// 	if unit == "" {
+	// 		unit = "imperial" // metric, imperial, standard
+	// 	}
+	// 	fmt.Printf("Unit: %s\n", unit)
 
-		weatherData, err := getWeatherJson(city, unit)
-		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-			return
-		}
+	// 	weatherData, err := getWeatherWords(city, unit)
+	// 	if err != nil {
+	// 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+	// 		return
+	// 	}
 
-		asciiWeather := generateAsciiWeather(weatherData)
-		weatherString := string(asciiWeather)
-		c.String(http.StatusOK, weatherString)
-	})
+	// 	asciiWeather := generateAsciiWeather(weatherData)
+	// 	c.String(http.StatusOK, asciiWeather)
+	// })
 
 	router.GET("/weather_all/:city", func(c *gin.Context) {
 		city := c.Param("city")
@@ -196,7 +214,7 @@ func main() {
 		// unit query parameter
 		unit := c.Query("unit")
 		if unit == "" {
-			unit = "imperial" // metric, imperial, standard
+			unit = "imperial" // metric, imperial
 		}
 		fmt.Printf("Unit: %s\n", unit)
 

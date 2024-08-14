@@ -17,5 +17,8 @@ RUN go build -o main .
 # Expose port 8080
 EXPOSE 8080
 
+# Set release mode
+ENV GIN_MODE=release
+
 # Command to run when the container starts
 CMD ["./main"]
