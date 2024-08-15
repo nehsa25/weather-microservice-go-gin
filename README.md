@@ -18,7 +18,7 @@ Basic understanding of Go and Gin
 
 # Installation:
 
-- Download the code (replace with your download method)
+- Download the code
 - Navigate to the project directory:
 - cd weather-microservice
 
