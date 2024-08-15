@@ -7,7 +7,7 @@ This document outlines a basic weather microservice written in Golang using the 
 Retrieves weather information for a specified city.
 Optionally accepts a unit parameter (metric or imperial).
 Exposes a GET API endpoint for integration.
-Currently returns simply "cloudy"
+Plan is to eventually have it also be able to return as ascii and emojis but not yet..
 
 # Getting Started:
 
@@ -31,7 +31,9 @@ This starts the microservice on port 8080 by default (modifiable in the code).
 
 The service exposes a GET endpoint at /weather/:city (replace :city with the desired city name). You can optionally specify a unit (metric or imperial) in the query parameter unit:
 
-http://localhost:8080/weather/Vancouver?unit=metric
+http://localhost:8080/weather_all?city=Vancouver?unit=metric
+http://localhost:8080/weather_description?city=Vancouver?unit=metric
+http://localhost:8080/weather_temp?city=Vancouver?unit=imperial
 
 This will return weather information for Vancouver in JSON format.
 
